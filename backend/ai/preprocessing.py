@@ -1,4 +1,5 @@
 import nltk
+import torch
 import re
 import transformers 
 from transformers import BertTokenizer
@@ -53,6 +54,12 @@ def clean_text(text):
 f = open("data.txt", "r")
 currLabel = -1
 data = []
+input_ids = []
+attention_masks = []
+labels = []
+maxLen = 0
+
+tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
 
 for x in f:
     if x[0] == '*':
@@ -61,18 +68,30 @@ for x in f:
         if x != "\n":
             if currLabel >= 0:
                 x = removeHashtags(x)
-
                 x = x.strip()
                 data.append((x, currLabel))
             else:
                 print("ERR: no label defined")
 
+for x, y in data:
+    input_ids = tokenizer.encode(x, add_special_tokens=True)
+    maxLen = max(maxLen, len(input_ids))
+
 for text, label in data:
-    print(label, text)
+    encodedDict = tokenizer.encode_plus(
+        text,
+        add_special_tokens = True,
+        max_length = maxLen,
+        pad_to_max_length = True,
+        return_attention_mask = True,
+        return_tensors = 'pt'
+    )
 
-tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
+    input_ids.append(encodedDict['input_ids'])
+    attention_masks.append(encodedDict['attention_mask'])
+    labels.append(label)
 
-
-
-
-
+input_ids = torch.cat(input_ids, dim=0)
+attention_masks = torch.cat(attention_masks, dim=0)
+labels = torch.tensor(labels)
+    

@@ -51,7 +51,7 @@ def clean_text(text):
      
     return text
 
- 
+
 f = open("data.txt", "r")
 currLabel = -1
 data = []

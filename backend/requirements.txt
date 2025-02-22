@@ -8,3 +8,4 @@ bcrypt
 pyjwt
 torch 
 transformers
+nltk

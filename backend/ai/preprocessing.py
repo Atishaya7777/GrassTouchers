@@ -2,6 +2,7 @@ import nltk
 import torch
 import re
 import transformers 
+import random
 from transformers import BertTokenizer
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -62,8 +63,8 @@ maxLen = 0
 tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
 
 for x in f:
-    if x[0] == '*':
-        currLabel = int(x[2])
+    if x[:3] == "@#$":
+        currLabel = int(x[3])
     else:
         if x != "\n":
             if currLabel >= 0:
@@ -73,9 +74,15 @@ for x in f:
             else:
                 print("ERR: no label defined")
 
+random.shuffle(data)
+
 for x, y in data:
     input_ids = tokenizer.encode(x, add_special_tokens=True)
     maxLen = max(maxLen, len(input_ids))
+
+print(maxLen)
+
+input_ids = []
 
 for text, label in data:
     encodedDict = tokenizer.encode_plus(
@@ -87,6 +94,9 @@ for text, label in data:
         return_tensors = 'pt'
     )
 
+    if count < 10:
+        print(encodedDict['input_ids'])
+
     input_ids.append(encodedDict['input_ids'])
     attention_masks.append(encodedDict['attention_mask'])
     labels.append(label)
@@ -95,3 +105,6 @@ input_ids = torch.cat(input_ids, dim=0)
 attention_masks = torch.cat(attention_masks, dim=0)
 labels = torch.tensor(labels)
     
+torch.save(input_ids, "dataTensors/input_ids.pt")
+torch.save(attention_masks, "dataTensors/attention_masks.pt")
+torch.save(labels, "labels.pt")

@@ -94,9 +94,6 @@ for text, label in data:
         return_tensors = 'pt'
     )
 
-    if count < 10:
-        print(encodedDict['input_ids'])
-
     input_ids.append(encodedDict['input_ids'])
     attention_masks.append(encodedDict['attention_mask'])
     labels.append(label)
@@ -105,6 +102,6 @@ input_ids = torch.cat(input_ids, dim=0)
 attention_masks = torch.cat(attention_masks, dim=0)
 labels = torch.tensor(labels)
     
-torch.save(input_ids, "dataTensors/input_ids.pt")
-torch.save(attention_masks, "dataTensors/attention_masks.pt")
-torch.save(labels, "labels.pt")
+torch.save(input_ids, "dataTensor//input_ids.pt")
+torch.save(attention_masks, "dataTensor//attention_masks.pt")
+torch.save(labels, "dataTensor//labels.pt")

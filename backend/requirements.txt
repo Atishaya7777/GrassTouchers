@@ -6,3 +6,5 @@ supabase
 python-dotenv
 bcrypt
 pyjwt
+torch 
+transformers

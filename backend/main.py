@@ -34,6 +34,8 @@ class ConnectionManager:
             await connection.send_text(message)
 
 
+from ai import test
+
 app = FastAPI()
 
 manager = ConnectionManager()
@@ -57,6 +59,10 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World"}
 
+
+@app.get("/aitesting/")
+async def aitesting():
+    return {"message": test.test()}
 
 log = []
 

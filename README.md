@@ -1,5 +1,6 @@
 # Hackathon
-atish is stupid
+
+Make sure you read the README.md of both the backend and the frontend.
 
 
 

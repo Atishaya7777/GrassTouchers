@@ -3,3 +3,10 @@ pydantic
 nltk
 transformers
 torch
+uvicorn[standard]
+sqlalchemy
+supabase
+python-dotenv
+bcrypt
+pyjwt
+

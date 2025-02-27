@@ -1,34 +1,35 @@
-import http from "utils/https";
 import { endpoints } from "global/endpoints";
-import { useUserStore } from "store/useUserStore";
+import http from "utils/https";
 import { useMutation } from "react-query";
-import token from "utils/token";
 import { useNavigate } from "react-router";
 import { routePaths } from "global/routePaths";
+import { useUserStore } from "store/useUserStore";
+import token from "utils/token";
+import toast from "react-hot-toast";
 
 interface ILoginPostData {
-	username: string;
-	password: string;
+  username: string;
+  password: string;
 }
 
 export const login = (postData: ILoginPostData) => {
-	return http().post(endpoints.auth.login, postData);
-}
+  return http().post(endpoints.auth.login, postData);
+};
 
 export const useLogin = () => {
-	const addUserDetails = useUserStore((state) => state.addUserDetails);
-	const navigate = useNavigate();
+  const addUserDetails = useUserStore((state) => state.addUserDetails);
+  const navigate = useNavigate();
 
-	return useMutation(login, {
-		onSuccess: ({ payload }) => {
-			const { apiToken, userUniqueToken, ...userData } = payload;
-			token.setToken({ accessToken: apiToken, userUniqueToken: userUniqueToken });
-			addUserDetails(userData);
-			navigate(routePaths.home);
-		},
-		onError: ({ error }) => {
-			console.log("% LOGIN ERROR", error);
-			// TODO: Add a toaster to show an error occured
-		}
-	})
+  return useMutation(login, {
+    onSuccess: (data) => {
+      token.setToken({ accessToken: data.data.token });
+      toast.success("Login successful");
+      addUserDetails(data.data);
+      navigate(routePaths.globalChat);
+    },
+    onError: (error) => {
+      console.error("% LOGIN ERROR", error);
+      toast.error((error as any)?.detail || "An error occurred. Please try again.");
+    },
+  });
 };

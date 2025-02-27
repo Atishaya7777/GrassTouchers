@@ -1,6 +1,7 @@
 import { ErrorBoundary, ErrorMapper } from "components";
 import AppRouter from "./AppRouter"
 import { QueryClientProvider, QueryClient } from "react-query";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   // NOTE: The console logs are for debugging purposes.
@@ -48,6 +49,7 @@ function App() {
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <AppRouter />
+          <Toaster />
         </QueryClientProvider>
       </ErrorBoundary>
     </>

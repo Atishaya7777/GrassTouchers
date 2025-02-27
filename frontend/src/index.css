@@ -1,8 +1,48 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  font-family: "Pixelify Sans", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("./assets/grass_background_2.gif");
+}
+
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("./assets/grass_background.gif");
+}
+
+.input-shadow {
+  box-shadow: 0px 4px 4px 0px #00000040;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #454545;
+  min-width: 100%;
+}
+
+.leader-board-header {
+ text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
+}
+
+@theme {
+  --color-profile-bg: #2C2C2C;
+  --color-input-bg: #D9D9D9;
+  --color-leaderboard-header: #9370DB;
 }
 
 /* Put this at the very bottom of the file */
 @import "tailwindcss"
+

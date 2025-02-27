@@ -119,7 +119,8 @@ async def leaderboard(query: str = "messages"):
     if query == "messages":
         try:
             response = db_client.table("messages").select("username").execute()
-            responseUsers = db_client.table("users").select("username").execute()
+            responseUsers = db_client.table(
+                "users").select("username").execute()
             message_counts = {}
             result = {}
             for record in response.data:
@@ -143,7 +144,8 @@ async def leaderboard(query: str = "messages"):
     elif query == "credits":
         try:
             response = (
-                db_client.table("users").select("username,anti_social_credit").execute()
+                db_client.table("users").select(
+                    "username,anti_social_credit").execute()
             )
 
             result = {}
@@ -175,13 +177,15 @@ async def send_old_messages(websocket: WebSocket):
         for reaction in reactions.data:
             for message in messages.data:
                 if reaction["message_id"] == message["message_id"]:
-                    print("Found", reaction["reaction"], "for", message["message_id"])
+                    print("Found", reaction["reaction"],
+                          "for", message["message_id"])
                     decoded_reaction = decode_reaction(reaction["reaction"])
                     if "reactions" not in message.keys():
                         message["reactions"] = {}
                     if decoded_reaction not in message["reactions"].keys():
                         message["reactions"][decoded_reaction] = []
-                    message["reactions"][decoded_reaction].append(reaction["username"])
+                    message["reactions"][decoded_reaction].append(
+                        reaction["username"])
 
         # print("Messages with reactions:", messages)
 
@@ -269,7 +273,8 @@ async def websocket_endpoint(websocket: WebSocket):
                         "classification": most_likely_category,
                     }
 
-                    response = db_client.table("messages").insert(db_message).execute()
+                    response = db_client.table(
+                        "messages").insert(db_message).execute()
                     db_message["message_id"] = response.data[0]["message_id"]
 
                     await manager.broadcast(json.dumps(db_message))
@@ -279,7 +284,8 @@ async def websocket_endpoint(websocket: WebSocket):
                         "message_id": message.content.id,
                         "reaction": parse_reaction(message.content.reaction),
                     }
-                    response = db_client.table("reactions").insert(db_message).execute()
+                    response = db_client.table(
+                        "reactions").insert(db_message).execute()
                     # Add coins to the client
                     # Get number of coins
                     response = (
@@ -341,7 +347,8 @@ async def get_anti_social_credit(username: str):
             raise HTTPException(status_code=404, detail="Invalid username")
         else:
             print(f"Something went wrong: {e}")
-            raise HTTPException(status_code=500, detail="Internal Server Error")
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error")
 
 
 """GRASS CODE IS HERE"""
@@ -366,7 +373,8 @@ async def grass_status(username: str):
                 raise HTTPException(status_code=404, detail="Invalid username")
             else:
                 print(f"Something went wrong: {e}")
-                raise HTTPException(status_code=500, detail="Internal Server Error")
+                raise HTTPException(
+                    status_code=500, detail="Internal Server Error")
 
 
 # adds more grass, does not grow the grass that already exists
@@ -391,7 +399,8 @@ async def plant_grass(username: str, num_grass_to_plant: int = 1):
                         "x_coord": (int)(random.random() * 100),
                         "y_coord": (int)(random.random() * 100),
                         "grass_number": 1,
-                        "size": (int)(random.random() * 15) + 5,  # range of 5-20
+                        # range of 5-20
+                        "size": (int)(random.random() * 15) + 5,
                         # 100 +/- 20
                         "growth_rate": (int)(random.random() * 20) + 100,
                     }
@@ -405,7 +414,8 @@ async def plant_grass(username: str, num_grass_to_plant: int = 1):
                 ).eq("username", username).execute()
         except Exception as e:
             print(f"Something went wrong: {e}")
-            raise HTTPException(status_code=500, detail="Internal Server Error")
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error")
 
 
 # grow the grass that already exists, does not add more grass
@@ -429,7 +439,8 @@ async def remove_grass(username: str):
                 ).eq("username", username).execute()
         except Exception as e:
             print(f"Something went wrong: {e}")
-            raise HTTPException(status_code=500, detail="Internal Server Error")
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error")
 
 
 @app.patch("/grass/{username}")
@@ -453,7 +464,8 @@ async def grow_grass(username: str):
                 ).eq("username", username).execute()
         except Exception as e:
             print(f"Something went wrong: {e}")
-            raise HTTPException(status_code=500, detail="Invternal Server Error")
+            raise HTTPException(
+                status_code=500, detail="Invternal Server Error")
 
 
 # fertilize the grass (increase growth rate)
@@ -480,7 +492,8 @@ async def fertilize_grass(username: str, fertilizer_strength: int = 20):
                 ).eq("username", username).execute()
         except Exception as e:
             print(f"Something went wrong: {e}")
-            raise HTTPException(status_code=500, detail="Internal Server Error")
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error")
 
 
 async def user_exists(username: str):
@@ -501,7 +514,8 @@ async def user_exists(username: str):
         if e.status_code == 404:
             raise HTTPException(status_code=404, detail="Invalid username")
         else:
-            raise HTTPException(status_code=500, detail="Internal Server Error")
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error")
 
 
 if __name__ == "__main__":

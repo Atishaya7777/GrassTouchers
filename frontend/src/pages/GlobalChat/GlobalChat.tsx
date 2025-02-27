@@ -21,15 +21,14 @@ interface IMessage {
   reactions: { [emoji: string]: Array<string> };
 }
 
+const getRandomCoordinate = (max: any) => Math.floor(Math.random() * max);
 
-const getRandomCoordinate = (max) => Math.floor(Math.random() * max);
-
-const Grass = ({ x, y, initialSize, growthRate }) => {
+const Grass = ({ x, y, initialSize, growthRate }: any) => {
   const [size, setSize] = useState(initialSize);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSize((prevSize) => prevSize + growthRate);
+      setSize((prevSize: any) => prevSize + growthRate);
     }, 1000); // 1 minute interval
 
     return () => clearInterval(interval);
@@ -64,6 +63,10 @@ const GlobalChat = () => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const userData = useUserStore((state) => state.user);
+
+  document.addEventListener('beforeunload', () => {
+    socket?.close();
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageText(e.target.value);
